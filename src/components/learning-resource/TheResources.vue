@@ -1,17 +1,18 @@
 <template>
   <base-card>
-    <base-button @click="setSelectedTab('store-resources')" :mode="storedResButtonMode"
+    <base-button
+      @click="setSelectedTab('store-resources')"
+      :mode="storedResButtonMode"
       >Stored Resources</base-button
     >
-    <base-button @click="setSelectedTab('add-resources')" :mode="addResButtonMode"
+    <base-button
+      @click="setSelectedTab('add-resources')"
+      :mode="addResButtonMode"
       >Add Resource</base-button
     >
-  
   </base-card>
   <keep-alive>
-    <component :is="selectedTab">
-    
-  </component>
+    <component :is="selectedTab"> </component>
   </keep-alive>
 </template>
 
@@ -43,33 +44,38 @@ export default {
       ],
     };
   },
-  provide(){
-    return{
-        resources: this.storeResources,
-        addRes: this.addResource,
-    }
+  provide() {
+    return {
+      resources: this.storeResources,
+      addRes: this.addResource,
+      delRes: this.removeResource,
+    };
   },
-  computed:{
-    storedResButtonMode(){
-        return this.selectedTab === 'store-resources' ? null : 'flat'
+  computed: {
+    storedResButtonMode() {
+      return this.selectedTab === 'store-resources' ? null : 'flat';
     },
-    addResButtonMode(){
-        return this.selectedTab === 'add-resources' ? null : 'flat'
+    addResButtonMode() {
+      return this.selectedTab === 'add-resources' ? null : 'flat';
     },
   },
   methods: {
     setSelectedTab(input) {
       this.selectedTab = input;
     },
-    addResource(title,desc,link){
-        const newResource = {
-            id: new Date().toISOString,
-            title: title,
-            description: desc,
-            link:link,
-        }
-        this.storeResources.unshift(newResource);
-        this.selectedTab = 'store-resources';
+    addResource(title, desc, link) {
+      const newResource = {
+        id: new Date().toISOString,
+        title: title,
+        description: desc,
+        link: link,
+      };
+      this.storeResources.unshift(newResource);
+      this.selectedTab = 'store-resources';
+    },
+    removeResource(resId) {
+      const index = this.storeResources.findIndex(res => res.id === resId);
+      this.storeResources.splice(index,1)
     },
   },
 };
